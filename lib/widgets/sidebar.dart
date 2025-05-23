@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Sidebar extends StatelessWidget {
-  const Sidebar({super.key});
+  final void Function(String) onSelectScreen;
+
+  const Sidebar({super.key, required this.onSelectScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +52,9 @@ class Sidebar extends StatelessWidget {
                 fontSize: 24,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              onSelectScreen('meals');
+            },
           ),
           ListTile(
             leading: Icon(
@@ -65,7 +69,9 @@ class Sidebar extends StatelessWidget {
                 fontSize: 24,
               ),
             ),
-            onTap: () {},
+            onTap: () {
+              onSelectScreen('filters');
+            },
           ),
         ],
       ),

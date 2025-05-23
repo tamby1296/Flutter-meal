@@ -7,8 +7,9 @@ import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
   final void Function(Meal) onFavoriteToggle;
+  final List<Meal> meals;
 
-  const CategoriesScreen({super.key, required this.onFavoriteToggle});
+  const CategoriesScreen({super.key, required this.onFavoriteToggle, required this.meals});
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class CategoriesScreen extends StatelessWidget {
   }
 
   void _selectCategory(BuildContext context, Category category) {
-    final filteredMeals = availableMeals.where((meal) => meal.categories.contains(category.id)).toList();
+    final filteredMeals = meals.where((meal) => meal.categories.contains(category.id)).toList();
 
     Navigator.push(
       context,
