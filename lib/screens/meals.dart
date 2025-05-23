@@ -6,9 +6,8 @@ import 'package:flutter/material.dart';
 class MealsScreen extends StatelessWidget {
   final String? title;
   final List<Meal> meals;
-  final void Function(Meal) onFavoriteMeal;
 
-  const MealsScreen({super.key, this.title, required this.meals, required this.onFavoriteMeal});
+  const MealsScreen({super.key, this.title, required this.meals});
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +40,7 @@ class MealsScreen extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (ctx) => MealDetails(meal, onFavoriteToggle: onFavoriteMeal,),
+        builder: (ctx) => MealDetails(meal),
       ),
     );
   }
