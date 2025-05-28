@@ -1,18 +1,11 @@
 import 'package:demo4/providers/favorites_provider.dart';
-import 'package:demo4/providers/meals_provider.dart';
+import 'package:demo4/providers/filters_provider.dart';
 import 'package:demo4/screens/categories.dart';
 import 'package:demo4/screens/filters.dart';
 import 'package:demo4/screens/meals.dart';
 import 'package:demo4/widgets/sidebar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-const kInitialFilters = {
-    FilterEnum.glutenFree: false,
-    FilterEnum.lactoseFree: false,
-    FilterEnum.vegetarian: false,
-    FilterEnum.vegan: false,
-  };
 
 class Tabs extends ConsumerStatefulWidget {
   const Tabs({super.key});
@@ -25,7 +18,6 @@ class Tabs extends ConsumerStatefulWidget {
 
 class _TabsState extends ConsumerState<Tabs> {
   int _selectedPageIndex = 0;
-  Map<FilterEnum, bool> _selectedFilters = kInitialFilters;
 
   void _selectPage(int index) {
     setState(() {
@@ -37,29 +29,18 @@ class _TabsState extends ConsumerState<Tabs> {
     Navigator.pop(context);
 
     if (identifier == 'filters') {
-      final result = await Navigator.of(context).push<Map<FilterEnum, bool>>(
-        MaterialPageRoute(builder: (ctx) => Filters(currentFilters: _selectedFilters,)),
+      Navigator.of(context).push<Map<FilterEnum, bool>>(
+        MaterialPageRoute(builder: (ctx) => Filters()),
       );
-
-      setState(() {
-        _selectedFilters = result ?? kInitialFilters;
-      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
     String activePageName = 'Categories';
-    final meals = ref.watch(MealsProvider);
-    final availableMeals = meals.where((meal) {
-      if(_selectedFilters[FilterEnum.glutenFree]! && !meal.isGlutenFree) return false;
-      if(_selectedFilters[FilterEnum.lactoseFree]! && !meal.isLactoseFree) return false;
-      if(_selectedFilters[FilterEnum.vegetarian]! && !meal.isVegetarian) return false;
-      if(_selectedFilters[FilterEnum.vegan]! && !meal.isVegan) return false;
-      return true;
-    }).toList();
+    final filteredMeals = ref.watch(filteredMealsProvider);
 
-    Widget content = CategoriesScreen(meals: availableMeals);
+    Widget content = CategoriesScreen(meals: filteredMeals);
 
     if (_selectedPageIndex == 1) {
     final favoriteMeals = ref.watch(favoriteMealsProvider);

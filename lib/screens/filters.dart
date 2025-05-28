@@ -1,35 +1,13 @@
+import 'package:demo4/providers/filters_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum FilterEnum { glutenFree, lactoseFree, vegetarian, vegan }
-
-class Filters extends StatefulWidget {
-  final Map<FilterEnum, bool> currentFilters;
-
-  const Filters({super.key, required this.currentFilters});
+class Filters extends ConsumerWidget {
+  const Filters({super.key});
 
   @override
-  State<StatefulWidget> createState() {
-    return _FiltersState();
-  }
-}
-
-class _FiltersState extends State<Filters> {
-  bool isGlutenFree = false;
-  bool isLactoseFree = false;
-  bool isVegetarian = false;
-  bool isVegan = false;
-
-  @override
-  void initState() {
-    isGlutenFree = widget.currentFilters[FilterEnum.glutenFree] ?? false;
-    isLactoseFree = widget.currentFilters[FilterEnum.lactoseFree] ?? false;
-    isVegetarian = widget.currentFilters[FilterEnum.vegetarian] ?? false;
-    isVegan = widget.currentFilters[FilterEnum.vegan] ?? false;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filters = ref.watch(filtersProvider);
     return Scaffold(
       // drawer: Sidebar(onSelectScreen: (identifier) {
       //   Navigator.pop(context);
@@ -39,24 +17,13 @@ class _FiltersState extends State<Filters> {
       // }),
       appBar: AppBar(title: Text('Your filters')),
       body: PopScope(
-        canPop: false,
-        onPopInvokedWithResult: (isPopped, result) {
-          if (isPopped) return;
-          Navigator.of(context).pop({
-            FilterEnum.glutenFree: isGlutenFree,
-            FilterEnum.lactoseFree: isLactoseFree,
-            FilterEnum.vegetarian: isVegetarian,
-            FilterEnum.vegan: isVegan,
-          });
-        },
+        canPop: true,
         child: Column(
           children: [
             SwitchListTile(
-              value: isGlutenFree,
+              value: filters[FilterEnum.glutenFree]!,
               onChanged: (isChecked) {
-                setState(() {
-                  isGlutenFree = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(FilterEnum.glutenFree);
               },
               title: Text(
                 'Gluten-free',
@@ -74,11 +41,9 @@ class _FiltersState extends State<Filters> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: isLactoseFree,
+              value: filters[FilterEnum.lactoseFree]!,
               onChanged: (isChecked) {
-                setState(() {
-                  isLactoseFree = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(FilterEnum.lactoseFree);
               },
               title: Text(
                 'Lactose-free',
@@ -96,11 +61,9 @@ class _FiltersState extends State<Filters> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: isVegetarian,
+              value: filters[FilterEnum.vegetarian]!,
               onChanged: (isChecked) {
-                setState(() {
-                  isVegetarian = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(FilterEnum.vegetarian);
               },
               title: Text(
                 'Vegetarian',
@@ -118,11 +81,9 @@ class _FiltersState extends State<Filters> {
               contentPadding: EdgeInsets.only(left: 34, right: 22),
             ),
             SwitchListTile(
-              value: isVegan,
+              value: filters[FilterEnum.vegan]!,
               onChanged: (isChecked) {
-                setState(() {
-                  isVegan = isChecked;
-                });
+                ref.read(filtersProvider.notifier).setFilter(FilterEnum.vegan);
               },
               title: Text(
                 'Vegan',

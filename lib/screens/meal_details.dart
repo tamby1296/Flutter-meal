@@ -9,7 +9,8 @@ class MealDetails extends ConsumerWidget {
   const MealDetails(this.meal, {super.key});
 
   void _showInfoMessage(BuildContext context, bool wasAdded) {
-    final message = wasAdded ? 'Meal added as favorite' : 'Meal is no longer a favorite';
+    final message =
+        wasAdded ? 'Meal added as favorite' : 'Meal is no longer a favorite';
     ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(
       context,
@@ -18,16 +19,22 @@ class MealDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final isFavorite = ref.watch(favoriteMealsProvider).contains(meal);
     return Scaffold(
       appBar: AppBar(
         title: Text(meal.title),
         actions: [
           IconButton(
             onPressed: () {
-              final wasAdded = ref.read(favoriteMealsProvider.notifier).toggleMealFavoriteStatus(meal);
+              final wasAdded = ref
+                  .read(favoriteMealsProvider.notifier)
+                  .toggleMealFavoriteStatus(meal);
               _showInfoMessage(context, wasAdded);
             },
-            icon: const Icon(Icons.star),
+            icon:
+                isFavorite
+                    ? const Icon(Icons.star)
+                    : const Icon(Icons.star_border_outlined),
           ),
         ],
       ),
